@@ -71,12 +71,12 @@ apktransform {
 }
 
 android {
-    namespace = "io.github.bbzq"
+    namespace = "im.majo.mikufans"
     compileSdk = 37
     buildToolsVersion = "37.0.0"
 
     defaultConfig {
-        applicationId = "io.github.bbzq"
+        applicationId = "im.majo.mikufans"
         minSdk = 24
         targetSdk = 37
         versionCode = releaseCode
