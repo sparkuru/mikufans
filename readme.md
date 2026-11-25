@@ -19,6 +19,17 @@
   - 隐私
     - [ ] 去遥测
 
+## development
+
+使用 Docker 运行 Android 开发命令，无需在宿主机安装 JDK、Gradle 或 Android SDK。首次初始化会下载 SDK 并接受所需的 Android SDK 许可协议，缓存保存在不受版本控制的 `.devhome/` 中。
+
+```bash
+./hako bash scripts/setup-android-sdk.sh
+./hako gradle --no-daemon assembleDebug
+```
+
+Debug APK 位于 `app/build/outputs/apk/debug/`。Release 构建可运行 `./hako gradle --no-daemon assembleRelease`，需要预先配置签名参数。
+
 ## refers
 
 1. upstream, https://github.com/HSSkyBoy/BBZQ.git
