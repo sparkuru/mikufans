@@ -2,7 +2,7 @@
 
 ## Toolchain and first setup
 
-The Android module is `app/`. `app/build.gradle.kts` currently sets compile/target SDK 37, build-tools 37.0.0, minSdk 24, arm64-v8a, and Java/Kotlin target 21. The Gradle wrapper is 9.4.1. The root `hako` runs a pinned Gradle/JDK 21 container as the host UID/GID; Docker and a reachable daemon are host prerequisites. The project root is mounted at `/app` and SDK/Gradle caches live in ignored `.devhome/`.
+The Android module is `app/`. `app/build.gradle.kts` currently sets compile/target SDK 37, build-tools 37.0.0, minSdk 26 (Android 8.0), arm64-v8a, and Java/Kotlin target 21. The module requires libxposed API 102 or later. The Gradle wrapper is 9.4.1. The root `hako` runs a pinned Gradle/JDK 21 container as the host UID/GID; Docker and a reachable daemon are host prerequisites. The project root is mounted at `/app` and SDK/Gradle caches live in ignored `.devhome/`.
 
 From the repository root, `./hako bash scripts/setup-android-sdk.sh` installs the specified Android SDK components and accepts their required licenses. It may download the verified command-line-tools archive and other SDK components. Then run `./hako gradle --no-daemon assembleDebug`; the APK is in `app/build/outputs/apk/debug/`. If all dependencies and SDK components are cached, `./hako gradle --offline --no-daemon assembleDebug` also works. Missing cache, Docker permission, network, or SDK license is a concrete blocker, not a passed build. Do not run the setup script merely to inspect the project.
 

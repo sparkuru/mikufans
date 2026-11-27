@@ -10,13 +10,61 @@ The current settings UI uses native Android Views. [`SettingsActivity.kt`](../..
 
 ## Module, process, and hook registration
 
-[`java_init.list`](../../../app/src/main/resources/META-INF/xposed/java_init.list) names `im.majo.mikufans.BbzqModule`; [`module.prop`](../../../app/src/main/resources/META-INF/xposed/module.prop) specifies libxposed API 102 and static scope. [`scope.list`](../../../app/src/main/resources/META-INF/xposed/scope.list) lists four target packages, including `com.bilibili.app.in`. Treat this as configured scope, not proof that every feature is compatible with every listed host.
+[`java_init.list`](../../../app/src/main/resources/META-INF/xposed/java_init.list) names `im.majo.mikufans.BbzqModule`; [`module.prop`](../../../app/src/main/resources/META-INF/xposed/module.prop) specifies a minimum libxposed API of 102, a target API of 102, and static scope. The target is not a maximum; API versions above 102 have not been independently verified. [`scope.list`](../../../app/src/main/resources/META-INF/xposed/scope.list) lists four target packages, including `com.bilibili.app.in`. Treat this as configured scope, not proof that every feature is compatible with every listed host.
 
 [`BbzqModule.kt`](../../../app/src/main/java/im/majo/mikufans/BbzqModule.kt) checks target package and process, starts the runtime after application attachment or through the current application, and uses atomic guards against repeated startup. When changing supported targets, review the scope file, `BbzqModule` target set, [`ModuleSettingsProvider.kt`](../../../app/src/main/java/im/majo/mikufans/ModuleSettingsProvider.kt) caller allowlist, and [`AndroidManifest.xml`](../../../app/src/main/AndroidManifest.xml) package queries together.
 
 [`RoamingRuntime.kt`](../../../app/src/main/java/im/majo/mikufans/feats/RoamingRuntime.kt) places factories in main, `:web`, or `:download` process lists and ignores unsupported processes. Feature hooks extend `BaseRoamingHook` and implement `startHook()`; [`ShareHook.kt`](../../../app/src/main/java/im/majo/mikufans/feats/hook/ShareHook.kt) shows registration in both main and web scopes and counts resolved methods. Put a new hook in the process where its target actually runs, and reuse [`Reflect.kt`](../../../app/src/main/java/im/majo/mikufans/feats/Reflect.kt) and [`Api102Hook.kt`](../../../app/src/main/java/im/majo/mikufans/feats/Api102Hook.kt) where they fit.
 
 Reflection helpers may return `null`, and individual method helpers may return zero when a target is absent. Those values are observations, not evidence that the intended behavior is installed. Obfuscated class names and method signatures are host-version-sensitive: inspect the actual 3.20.4 APK when relevant, record the matched target and process, and exercise the affected feature on an appropriate device.
+
+### Scenario: Android API boundaries for hooks and settings navigation
+
+#### 1. Scope / trigger
+
+Apply this contract when changing the libxposed API 102 hook boundary, host class-loader selection, settings Back navigation, or window insets. The application declares `minSdk=26` (Android 8.0) and requires libxposed API 102 or newer. The cached API, service, and service-interface 102 AAR manifests each declare a minimum of API 26; the application does not override their minimum SDK. This minimum does not prove compatibility on API 26–29. Vector's upstream declares Android 8.1 as its own minimum; a framework supporting both Android 8.0 and libxposed API 102 has not yet been verified.
+
+#### 2. Signatures
+
+- `RoamingEnv.hookBefore`, `hookAfter`, and `replace` accept `Executable`; `Method` and `Constructor<*>` are compatible with that type on the app's supported API levels.
+- `BbzqModule.onPackageLoaded(PackageLoadedParam)` starts the host runtime once, choosing the application class loader and then the framework default on API 29+ or `Context.classLoader` below 29 when needed.
+- `SettingsActivity` routes both its API 33+ `OnBackInvokedCallback` and its older `onBackPressed()` path through the same navigation handler.
+
+#### 3. Contracts
+
+Keep the app minimum at API 26 and the module's libxposed minimum at API 102 unless the user approves a support-policy change. Do not assume the host class loader is always the module class loader or invoke `PackageLoadedParam.getDefaultClassLoader()` below API 29. On API 33+ the activity registers the system Back callback and unregisters it on destruction; on older systems the legacy callback remains necessary. The hidden-features page returns to settings root, while other pages finish. System-bar and display-cutout insets use the API 30 interface on API 30+, the available legacy interfaces on API 26–29, and cutout safety values only on API 28+.
+
+#### 4. Validation and error matrix
+
+| Condition | Required behavior |
+| --- | --- |
+| Device API below 26 | The package declares API 26 as its install minimum; these systems are outside the supported app range. |
+| API 26–28 application class loader is unavailable | Use `Context.classLoader` without calling the API 29 framework method. |
+| API 29+ application class loader is unavailable | Use the framework default class loader. |
+| API 33+ system Back is invoked | Run the same page-specific action as the legacy Back path. |
+| API 26–27 window insets | Use available system-window insets without accessing display-cutout APIs. |
+
+#### 5. Good / base / bad cases
+
+Good: an API 35 or API 36 gesture returns from hidden features to settings root. Base: an API 30 Back event follows the same transition. Bad: treating the dependency's API 26 minimum as proof of a working API 26 framework or device, or globally suppressing `NewApi` instead of guarding the runtime boundary.
+
+#### 6. Tests required
+
+Run `lintDebug`, `testDebugUnitTest`, and `assembleDebug`; inspect the generated APK's minSdk and packaged module metadata. Exercise settings Back and visible insets on available older and newer devices, and verify module startup plus the changed host path on the target host. Record untested API versions, cutout devices, hot reload, and individual hook paths explicitly; an Android 16 edge-gesture result does not prove all predictive animations or API 26–29 compatibility.
+
+#### 7. Wrong vs correct
+
+```kotlin
+// Wrong: this framework method is API 29+.
+val loader = param.getDefaultClassLoader()
+
+// Correct when the application's own class loader is unavailable.
+val loader = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    param.getDefaultClassLoader()
+} else {
+    application.classLoader
+}
+```
 
 ## Settings and cross-process data
 
@@ -40,7 +88,7 @@ Use this contract when changing the `block_update_enabled` switch or its hook fo
 
 #### 3. Contracts
 
-The hook runs only in the target package's main process, version code `8230800` / version name `3.20.4`, on Android 8.0 or newer. If the setting is unavailable, it leaves the host method in control. Once a hook instance reads `false`, that instance stays disabled for its lifetime. The settings page says to restart the host and reports when synchronization is unconfirmed; hot reload may create another instance and was not separately verified.
+The hook runs only in the target package's main process, version code `8230800` / version name `3.20.4`, on the app's supported Android 8.0 or newer. If the setting is unavailable, it leaves the host method in control. Once a hook instance reads `false`, that instance stays disabled for its lifetime. The settings page says to restart the host and reports when synchronization is unconfirmed; hot reload may create another instance and was not separately verified.
 
 #### 4. Validation and error matrix
 

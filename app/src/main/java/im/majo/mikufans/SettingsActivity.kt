@@ -1,8 +1,10 @@
 ﻿package im.majo.mikufans
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
@@ -11,8 +13,12 @@ import android.view.WindowInsets
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.window.OnBackInvokedCallback
+import android.window.OnBackInvokedDispatcher
 
 class SettingsActivity : Activity() {
+    private var unregisterBackCallback: (() -> Unit)? = null
+
     private val prefs by lazy {
         val base = getSharedPreferences(ModuleSettings.PREFS_NAME, MODE_PRIVATE)
         ReadableModulePreferences(this, base)
@@ -22,6 +28,16 @@ class SettingsActivity : Activity() {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         RuntimeEnvironmentInfo.applyRuntimeSnapshotFromIntent(intent, prefs)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val callback = OnBackInvokedCallback { handleBackNavigation() }
+            onBackInvokedDispatcher.registerOnBackInvokedCallback(
+                OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                callback,
+            )
+            unregisterBackCallback = {
+                onBackInvokedDispatcher.unregisterOnBackInvokedCallback(callback)
+            }
+        }
 
         val page = intent.getStringExtra(EXTRA_PAGE) ?: PAGE_ROOT
         val toolbar = createToolbar(page)
@@ -61,8 +77,20 @@ class SettingsActivity : Activity() {
         recreate()
     }
 
+    override fun onDestroy() {
+        unregisterBackCallback?.invoke()
+        unregisterBackCallback = null
+        super.onDestroy()
+    }
+
+    // Android 12 and earlier deliver system Back through this method.
+    @SuppressLint("GestureBackNavigation")
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        handleBackNavigation()
+    }
+
+    private fun handleBackNavigation() {
         val page = intent.getStringExtra(EXTRA_PAGE) ?: PAGE_ROOT
         if (page == PAGE_HIDDEN_FEATURES) {
             ModuleSettingsNavigator.open(
@@ -124,11 +152,26 @@ class SettingsActivity : Activity() {
         val contentBottom = content.paddingBottom
 
         root.setOnApplyWindowInsetsListener { _, insets ->
-            val safeInsets =
-                insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+            val (safeTop, safeBottom) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val safeInsets =
+                    insets.getInsets(WindowInsets.Type.systemBars() or WindowInsets.Type.displayCutout())
+                safeInsets.top to safeInsets.bottom
+            } else {
+                @Suppress("DEPRECATION")
+                val barTop = insets.systemWindowInsetTop
+                @Suppress("DEPRECATION")
+                val barBottom = insets.systemWindowInsetBottom
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val cutout = insets.displayCutout
+                    maxOf(barTop, cutout?.safeInsetTop ?: 0) to
+                        maxOf(barBottom, cutout?.safeInsetBottom ?: 0)
+                } else {
+                    barTop to barBottom
+                }
+            }
             toolbar.setPadding(
                 toolbarLeft,
-                toolbarTop + safeInsets.top,
+                toolbarTop + safeTop,
                 toolbarRight,
                 toolbarBottom,
             )
@@ -136,7 +179,7 @@ class SettingsActivity : Activity() {
                 contentLeft,
                 contentTop,
                 contentRight,
-                contentBottom + safeInsets.bottom,
+                contentBottom + safeBottom,
             )
             insets
         }

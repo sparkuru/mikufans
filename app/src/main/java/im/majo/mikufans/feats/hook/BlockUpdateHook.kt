@@ -28,10 +28,6 @@ class BlockUpdateHook(env: RoamingEnv) : BaseRoamingHook(env) {
 
     override fun startHook() {
         if (env.packageName != TARGET_PACKAGE || env.processName != TARGET_PACKAGE) return
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            log("BlockUpdate skipped: Android 8.0 or newer is required")
-            return
-        }
         if (!isSupportedVersion()) return
 
         val updater = UPDATER_CLASS.from(classLoader)

@@ -1,6 +1,7 @@
 ﻿package im.majo.mikufans.feats.hook
 
 import android.content.SharedPreferences
+import android.os.Build
 import im.majo.mikufans.ModuleSettings
 import im.majo.mikufans.ModuleSettingsBridge
 import im.majo.mikufans.StoryVideoAdTag
@@ -124,8 +125,15 @@ class StoryPlayerAdHook(env: RoamingEnv) : BaseRoamingHook(env) {
             isStoryDetailListParameter(method)
 
     private fun isStoryDetailListParameter(method: Method): Boolean {
-        val parameterType = method.genericParameterTypes.firstOrNull()?.typeName ?: return true
-        return parameterType == List::class.java.name || parameterType.contains(STORY_DETAIL)
+        val parameterType = method.genericParameterTypes.firstOrNull() ?: return true
+        val typeName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            parameterType.typeName
+        } else if (parameterType is Class<*>) {
+            parameterType.name
+        } else {
+            parameterType.toString()
+        }
+        return typeName == List::class.java.name || typeName.contains(STORY_DETAIL)
     }
 
     private fun filterReturnList(param: MethodHookParam): FilterResult? {

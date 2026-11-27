@@ -77,7 +77,7 @@ android {
 
     defaultConfig {
         applicationId = "im.majo.mikufans"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 37
         versionCode = releaseCode
         versionName = "v${releaseName}-${releaseCode}"

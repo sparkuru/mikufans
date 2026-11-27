@@ -947,7 +947,7 @@ class SettingsContentFactory(
             setPadding(dp(10), dp(8), dp(10), dp(8))
             items.forEach { item ->
                 addView(CheckBox(context).apply {
-                    text = "${item.name}\n${item.className}"
+                    text = context.getString(R.string.home_component_item, item.name, item.className)
                     textSize = 14f
                     setTextColor(TITLE_COLOR)
                     setPadding(dp(6), dp(2), dp(6), dp(2))

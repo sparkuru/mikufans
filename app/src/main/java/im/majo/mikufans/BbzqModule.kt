@@ -2,6 +2,7 @@ package im.majo.mikufans
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import im.majo.mikufans.feats.RoamingRuntime
 import io.github.libxposed.api.XposedInterface
@@ -41,7 +42,7 @@ class BbzqModule : XposedModule() {
         this.packageName = packageName
 
         if (attachHookInstalled.compareAndSet(false, true).not()) {
-            maybeStartRuntime(packageName, processName, param.getDefaultClassLoader())
+            maybeStartRuntime(packageName, processName, param)
             return
         }
 
@@ -56,11 +57,11 @@ class BbzqModule : XposedModule() {
                     packageName = packageName,
                     processName = processName,
                     application = application,
-                    classLoader = application.javaClass.classLoader ?: param.getDefaultClassLoader(),
+                    classLoader = resolveClassLoader(application, param),
                 )
             }
 
-        maybeStartRuntime(packageName, processName, param.getDefaultClassLoader())
+        maybeStartRuntime(packageName, processName, param)
     }
 
     override fun onHotReloading(param: HotReloadingParam): Boolean {
@@ -147,17 +148,23 @@ class BbzqModule : XposedModule() {
     private fun maybeStartRuntime(
         packageName: String,
         processName: String,
-        classLoader: ClassLoader,
+        param: PackageLoadedParam,
     ) {
         val application = resolveCurrentApplication() ?: return
-        val resolvedClassLoader = application.javaClass.classLoader ?: classLoader
         startRuntimeOnce(
             packageName = packageName,
             processName = processName,
             application = application,
-            classLoader = resolvedClassLoader,
+            classLoader = resolveClassLoader(application, param),
         )
     }
+
+    private fun resolveClassLoader(application: Application, param: PackageLoadedParam): ClassLoader =
+        application.javaClass.classLoader ?: if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            param.getDefaultClassLoader()
+        } else {
+            application.classLoader
+        }
 
     private fun resolveCurrentApplication(): Application? {
         return runCatching {

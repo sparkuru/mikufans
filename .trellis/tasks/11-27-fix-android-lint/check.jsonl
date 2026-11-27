@@ -1,0 +1,12 @@
+{"file": ".trellis/mainline.md", "reason": "Project direction and current validation baseline"}
+{"file": ".trellis/spec/trellis-plus/index.md", "reason": "Shared project policy index"}
+{"file": ".trellis/spec/trellis-plus/development-principles.md", "reason": "Scope and preservation principles"}
+{"file": ".trellis/spec/trellis-plus/android-conventions.md", "reason": "Android hooks, SDK compatibility, and settings contracts"}
+{"file": ".trellis/spec/trellis-plus/development.md", "reason": "Android build and validation workflow"}
+{"file": ".trellis/spec/trellis-plus/ui-validation.md", "reason": "Native UI and back navigation validation"}
+{"file": ".trellis/spec/trellis-plus/review-and-archive.md", "reason": "Review and closure requirements"}
+{"file": ".trellis/spec/guides/index.md", "reason": "Shared thinking guide index"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Cross-layer Android changes"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse established implementation patterns"}
+{"file": ".trellis/tasks/archive/2026-11/11-27-handle-forced-update/research/update-investigation.md", "reason": "Lint baseline and prior device evidence"}
+{"file": ".trellis/tasks/11-27-fix-android-lint/research/lint-verification.md", "reason": "Lint categories, API boundaries, and device evidence"}

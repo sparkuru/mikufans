@@ -105,7 +105,7 @@ fun Class<*>.callStaticMethod(name: String?, vararg args: Any?): Any? {
 
 fun Class<*>.newInstanceOrNull(vararg args: Any?): Any? {
     val constructor = declaredConstructors.firstOrNull { candidate ->
-        candidate.parameterCount == args.size &&
+        candidate.parameterTypes.size == args.size &&
             candidate.parameterTypes.indices.all { index ->
                 candidate.parameterTypes[index].isAssignableFromBoxed(args[index])
             }
