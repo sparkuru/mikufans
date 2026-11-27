@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="./assets/mikufans-logo.png" alt="Mikufans logo" width="320">
+</p>
 
 基于 BBZQ (https://github.com/HSSkyBoy/BBZQ) v1.0.3（15ed308）；非官方维护分支
 
