@@ -13,3 +13,7 @@
 keystore.properties
 /signing
 /.devhome
+
+# diy
+
+/archive/
