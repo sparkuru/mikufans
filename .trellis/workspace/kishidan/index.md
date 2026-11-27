@@ -1,4 +1,4 @@
-# Workspace Index - 9bishi
+# Workspace Index - kishidan
 
 > Journal tracking for AI development sessions.
 
