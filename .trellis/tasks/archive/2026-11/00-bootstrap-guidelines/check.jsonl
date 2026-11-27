@@ -1,0 +1,8 @@
+{"file": ".trellis/spec/trellis-plus/index.md", "reason": "Shared project policy and loading rules"}
+{"file": ".trellis/spec/trellis-plus/development-principles.md", "reason": "Project development and evidence boundaries"}
+{"file": ".trellis/mainline.md", "reason": "Bootstrap project context"}
+{"file": ".trellis/spec/trellis-plus/android-conventions.md", "reason": "Bootstrap project context"}
+{"file": ".trellis/spec/trellis-plus/development.md", "reason": "Bootstrap project context"}
+{"file": ".trellis/spec/trellis-plus/ui-validation.md", "reason": "Bootstrap project context"}
+{"file": ".trellis/spec/trellis-plus/review-and-archive.md", "reason": "Bootstrap project context"}
+{"file": "third_party/index.md", "reason": "Bootstrap project context"}

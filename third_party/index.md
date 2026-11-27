@@ -1,0 +1,8 @@
+# Third-party Notices
+
+| Material | Exact source and version | Retained paths | Notice |
+| --- | --- | --- | --- |
+| Trellis CLI and generated project templates | `@mindfoldhq/trellis` and `@mindfoldhq/trellis-core` 0.6.17, distributed by [Mindfold Trellis](https://github.com/mindfold-ai/trellis) | The Trellis-managed part of `AGENTS.md`; `.trellis/workflow.md`, `.trellis/scripts/`, `.trellis/agents/`, configuration and template metadata; generated spec scaffolds, guides and initial task/workspace material | [Trellis-0.6.17-LICENSE](Trellis-0.6.17-LICENSE), copied verbatim from the installed CLI distribution; its bundled core distribution has identical license text. Keep any original inline notices. |
+| Gradle Wrapper JAR | The retained JAR's SHA-256 is `2db75c40782f5e8ba1fc278a5574bab070adccb2d21ca5a6e5ed840888448046`, matching the identical wrapper JAR published for Gradle 8.10 through 8.12.1 in [Gradle's release checksums](https://gradle.org/release-checksums/#8.12.1). The original generating release among those matches is unknown; the current 9.4.1 distribution URL is a separate setting. | `gradle/wrapper/gradle-wrapper.jar` | [Gradle-wrapper-2db75c4-LICENSE](Gradle-wrapper-2db75c4-LICENSE), extracted verbatim from the retained JAR's `META-INF/LICENSE`. |
+
+The root `license` and `readme.md` describe the project's existing Mulan PubL v2 licensing and BBZQ v1.0.3 origin; this inventory does not replace those notices or relabel Trellis material as project-authored. The project-local UUPM installation is ignored assistant tooling, not a retained project artifact. Package dependencies keep their own distributed notices; this inventory does not vendor every dependency.

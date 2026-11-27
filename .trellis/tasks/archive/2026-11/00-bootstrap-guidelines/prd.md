@@ -117,6 +117,22 @@ After archive, every new developer who joins this project will get a
 
 ---
 
+## Project-specific initialization acceptance
+
+The user requested completion of the existing framework on 2026-11-27. Reuse this already-in-progress task and preserve the original checklist above. This task prepares the repository for later Android development; it does not authorize implementation of the feature ideas in `readme.md`.
+
+- Replace the practical need behind the generic backend checklist with original Android/LSPosed conventions in `.trellis/spec/trellis-plus/`, backed by existing source examples; the upstream-generated backend scaffolds remain unchanged.
+- Record source-backed development, validation, UI, review, archive and continuity rules in the same shared policy layer. Record current product direction and proposed ideas separately in `.trellis/mainline.md`.
+- Establish a portable main-session discovery entry outside the managed `AGENTS.md` block and register the applicable files individually in both task context manifests. Validate the manifests with the installed task command.
+- Verify the existing Docker build route where available, initialize the user-approved Codex-local UUPM integration, and distinguish native device checks from browser-only checks. Record actual results and limitations without requiring product work.
+- Verify the retained Trellis baseline and exact applicable notice, document the current checklist evidence, and archive this task only after current-stage requirements and review are satisfied. A required archive commit remains a separate authorization decision.
+
+### Original checklist disposition
+
+The original “Fill backend guidelines” and “Add code examples” items are superseded for this Android project by the source-backed policy in `.trellis/spec/trellis-plus/android-conventions.md` and its linked development and validation details. That policy covers the real code layout, settings, errors, logging, and concrete source examples; the generated backend scaffolds remain unchanged, and no SQL/ORM behavior was invented. Both task manifests include the policy and passed validation; the current Codex check agent confirmed receiving the curated context. The original checkboxes above remain unchanged to preserve the template history. See `research/bootstrap-evidence.md` for the stage checks and remaining delivery gates.
+
+---
+
 ## Suggested opening line
 
 "Welcome to Trellis! Your init just set me up to help you fill the project

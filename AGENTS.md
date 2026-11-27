@@ -20,6 +20,10 @@ Managed by Trellis. Edits outside this block are preserved; edits inside may be 
 
 <!-- TRELLIS:END -->
 
+## Project policy discovery
+
+At the start of project work, after a substantial interruption, and before commit or archive, read `.trellis/mainline.md` and `.trellis/spec/trellis-plus/index.md` alongside the current task's acceptance criteria. For each new task, use `python3 .trellis/scripts/task.py add-context <task> implement <path> "<reason>"` and the corresponding `check` command to register the shared index and every applicable detail file explicitly; Markdown links are not automatic sub-agent context. Validate the manifests with `python3 .trellis/scripts/task.py validate <task>` before dispatch.
+
 ---
 
 ## APKs
