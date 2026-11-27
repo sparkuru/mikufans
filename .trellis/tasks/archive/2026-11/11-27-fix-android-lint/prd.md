@@ -8,7 +8,7 @@
 
 - 2026-11-27 重新执行 `./hako env JAVA_TOOL_OPTIONS=-Duser.home=/app/.devhome gradle --offline --no-daemon lintDebug`，结果为 79 个错误、48 个警告：78 个 `NewApi`、1 个 `GestureBackNavigation`、36 个 `UnusedResources`、6 个 `PrivateApi`、3 个 `DiscouragedApi`，以及各 1 个 `SetTextI18n`、`ExportedContentProvider` 和 `ChromeOsAbiSupport`。
 - 修复开始时项目声明 `minSdk=24`，本地 libxposed API 102、service 102 与 service interfaces 的 AAR 均声明 `minSdk=26`；原清单显式覆盖 service 的库版本要求。用户曾将最低版本调整为 API 27，随后明确改为与依赖一致的 Android 8.0 / API 26，并要求 libxposed API 102 及以上。
-- 目标宿主为 Bilibili International 3.20.4；更新拦截任务的背景和设备验证见[归档调查记录](../archive/2026-11/11-27-handle-forced-update/research/update-investigation.md)。
+- 目标宿主为 Bilibili International 3.20.4；更新拦截任务的背景和设备验证见[归档调查记录](../11-27-handle-forced-update/research/update-investigation.md)。
 
 ## 需求与约束
 

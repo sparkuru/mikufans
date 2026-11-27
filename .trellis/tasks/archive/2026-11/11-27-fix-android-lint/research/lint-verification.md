@@ -38,4 +38,4 @@
 
 初轮设备验证使用的旧 `minSdk=24` Debug APK 的 SHA-256 为 `b88610be5cdd3dd8c064e922f53fed247d04ac100c9297bdee6718c99ec5b670`；中间 `minSdk=27` Debug APK 为 `39cda0ed21aa92819e0ff77cda740a8886a21d2cf9ced8d83c8daa5bf6402c43`；最终 `minSdk=26` Debug APK 为 `e8dd26743b5cd1dbd69d52a660a7881dc52fd2dbd88e61374559ab8eaa8796eb`。截图和经标签过滤的临时日志位于 `/tmp`，不含在提交候选中。
 
-项目 review gate 评定为 `human-required`，最初原因是 API 24–29、Android 16+ 返回路径和合法宿主访问 Provider 等重要场景尚未实测。2026-11-27 用户选择“接受现有验证并记录限制”，随后提供 PLR110 补测 Android 16；其余未覆盖场景仍未因此通过。独立检查未发现确定的功能回归。提交和归档状态以任务目录及版本历史为准。
+项目 review gate 评定为 `human-required`，最初原因是 API 24–29、Android 16+ 返回路径和合法宿主访问 Provider 等重要场景尚未实测。2026-11-27 用户选择“接受现有验证并记录限制”，随后提供 PLR110 补测 Android 16；其余未覆盖场景仍未因此通过。独立检查未发现确定的功能回归；用户明确授权提交和归档，源码提交为 `91247d872d60fde7300f913c2deafb02d1a55d51`。
