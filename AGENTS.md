@@ -46,3 +46,9 @@ refer to upstream repo or third-party's forums/webs/repos/... for our impl.
 
 1. 可用的 android 设备, 见前文
 2. 优先使用 `$browseros-neo` skill + 对应 mcp 展开网络检索, 若不可用再退选 agent 自身的 search 工具
+3. 优先使用 hako 进行开发
+    ```bash
+    ./hako bash scripts/setup-android-sdk.sh
+    ./hako gradle --no-daemon assembleDebug
+    ```
+4.
