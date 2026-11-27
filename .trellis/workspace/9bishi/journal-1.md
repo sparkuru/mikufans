@@ -39,3 +39,38 @@
 ### Next Steps
 
 - 创建并规划既有 Android Lint 问题修复任务。
+
+
+## Session 2: Fix Android Lint backlog
+<!-- trellis-session: v=2 fp=6e64e937afdb2d7c -->
+
+**Date**: 2026-11-27
+**Task**: Fix Android Lint backlog
+**Branch**: `master`
+
+### Summary
+
+Resolved lint errors, aligned minSdk 26 and recorded accepted device coverage limits.
+
+### Main Changes
+
+- Aligned Android 8.0 and libxposed API 102 minimums; fixed navigation and compatibility paths.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `91247d872d60fde7300f913c2deafb02d1a55d51` | fix: resolve Android lint compatibility issues |
+
+### Testing
+
+- [OK] lintDebug: 0 errors, 12 documented warnings; testDebugUnitTest: 18 passed; assembleDebug passed.
+- [OK] Android 11 final APK smoke test; Android 16 earlier build back navigation and host entry.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Validate API 26–29 and an Android 8.0 framework when devices become available.
