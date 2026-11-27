@@ -16,7 +16,7 @@
 ## 预期验证命令
 
 ```bash
-python3 .trellis/scripts/task.py validate .trellis/tasks/11-27-handle-forced-update
+python3 .trellis/scripts/task.py validate .trellis/tasks/archive/2026-11/11-27-handle-forced-update
 ./hako gradle --no-daemon assembleDebug
 ./hako gradle --no-daemon testDebugUnitTest
 adb devices -l

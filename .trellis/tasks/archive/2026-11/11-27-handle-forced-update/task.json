@@ -3,7 +3,7 @@
   "name": "handle-forced-update",
   "title": "处理更新检测与强制更新",
   "description": "适配旧国际版更新检测与服务端强制更新行为",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": null,
   "scope": null,
   "package": null,
@@ -11,7 +11,7 @@
   "creator": "9bishi",
   "assignee": "9bishi",
   "createdAt": "2026-11-27",
-  "completedAt": null,
+  "completedAt": "2026-11-27",
   "branch": "master",
   "base_branch": "master",
   "worktree_path": null,
@@ -22,5 +22,7 @@
   "parent": "11-27-impl-bbzq-new-features",
   "relatedFiles": [],
   "notes": "",
-  "meta": {}
+  "meta": {
+    "work_commit": "ea4e37c"
+  }
 }

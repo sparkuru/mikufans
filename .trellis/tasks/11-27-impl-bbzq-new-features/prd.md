@@ -16,7 +16,7 @@
 | 子任务 | README 事项 |
 | --- | --- |
 | [修复分享短链净化](../11-27-fix-share-short-links/prd.md) | 短链分享清理。 |
-| [处理更新检测与强制更新](../11-27-handle-forced-update/prd.md) | 去更新检测，适配下发强制更新行为。 |
+| [处理更新检测与强制更新](../archive/2026-11/11-27-handle-forced-update/prd.md) | 去更新检测，适配下发强制更新行为；已归档，验证限制见任务记录。 |
 | [支持账号已购表情包](../11-27-support-purchased-emoji/prd.md) | 账号内合法付费表情包适配支持。 |
 | [复制动态中的第三方完整链接](../11-27-copy-dynamic-external-links/prd.md) | 提取动态推广中的第三方完整链接，点击后直接复制到剪贴板。 |
 | [去除遥测](../11-27-remove-telemetry/prd.md) | 隐私：去遥测。 |

@@ -8,6 +8,6 @@
 {"file": ".trellis/spec/guides/index.md", "reason": "Shared coding thinking guides"}
 {"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Inspect existing paths and avoid duplication"}
 {"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Consider host hooks and settings interactions"}
-{"file": ".trellis/tasks/11-27-handle-forced-update/research/update-investigation.md", "reason": "Observed host baseline and version-specific research"}
-{"file": ".trellis/tasks/11-27-handle-forced-update/design.md", "reason": "Task-specific design requires user approval before implementation"}
-{"file": ".trellis/tasks/11-27-handle-forced-update/research/ui-settings-decisions.md", "reason": "Native setting accessibility and UI research"}
+{"file": ".trellis/tasks/archive/2026-11/11-27-handle-forced-update/research/update-investigation.md", "reason": "Observed host baseline and verification limitations"}
+{"file": ".trellis/tasks/archive/2026-11/11-27-handle-forced-update/design.md", "reason": "Review implementation against task-specific design"}
+{"file": ".trellis/tasks/archive/2026-11/11-27-handle-forced-update/research/ui-settings-decisions.md", "reason": "Review native setting accessibility and UI behavior"}
