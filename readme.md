@@ -8,6 +8,11 @@
 
 原 v1.0.3 分支完整 readme 请阅读：[v1.0.3-readme](./v1.0.3-readme.md)
 
+## requirements
+
+- Android 8.0(API 26)+
+- libxposed API 102+, like vector
+
 ## features
 
 - 用于区分官方 bbzq, 应用包名由 `io.github.bbzq` 更改为 `im.majo.mikufans`
@@ -21,17 +26,6 @@
     - [ ] 提取动态消息中的完整链接: up 动态推广里的第三方链接比如 tb、jd 等站内的商品页, 一般会在跳转时强制登录账号, 这边的做法是点击链接后直接复制到剪贴板
   - 隐私
     - [ ] 去遥测
-
-## development
-
-使用 Docker 运行 Android 开发命令，无需在宿主机安装 JDK、Gradle 或 Android SDK。首次初始化会下载 SDK 并接受所需的 Android SDK 许可协议，缓存保存在不受版本控制的 `.devhome/` 中。
-
-```bash
-./hako bash scripts/setup-android-sdk.sh
-./hako gradle --no-daemon assembleDebug
-```
-
-Debug APK 位于 `app/build/outputs/apk/debug/`。Release 构建可运行 `./hako gradle --no-daemon assembleRelease`，需要预先配置签名参数。
 
 ## refers
 
