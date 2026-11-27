@@ -179,6 +179,32 @@ class SettingsContentFactory(
                 true,
             ),
             createSwitchRow(
+                context.getString(R.string.startup_block_update_title),
+                context.getString(R.string.startup_block_update_summary),
+                ModuleSettings.KEY_BLOCK_UPDATE_ENABLED,
+                ModuleSettings.DEFAULT_BLOCK_UPDATE_ENABLED,
+            ) { switch ->
+                switch.contentDescription = context.getString(R.string.startup_block_update_title)
+                switch.minimumWidth = dp(48)
+                switch.minimumHeight = dp(48)
+                switch.setOnCheckedChangeListener { button, isChecked ->
+                    if (!refreshing && !ModuleRemotePreferences.setBlockUpdateEnabled(context, isChecked)) {
+                        refreshing = true
+                        try {
+                            button.isChecked = runCatching {
+                                prefs.getBoolean(
+                                    ModuleSettings.KEY_BLOCK_UPDATE_ENABLED,
+                                    ModuleSettings.DEFAULT_BLOCK_UPDATE_ENABLED,
+                                )
+                            }.getOrDefault(!isChecked)
+                        } finally {
+                            refreshing = false
+                        }
+                        Toast.makeText(context, R.string.startup_block_update_save_failed, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            },
+            createSwitchRow(
                 context.getString(R.string.startup_block_teenagers_title),
                 context.getString(R.string.startup_block_teenagers_summary),
                 ModuleSettings.KEY_BLOCK_TEENAGERS_MODE_DIALOG_ENABLED,
@@ -942,7 +968,11 @@ class SettingsContentFactory(
         onSwitchReady: ((Switch) -> Unit)? = null,
     ): View {
         val switchView = Switch(context).apply {
-            isChecked = prefs.getBoolean(key, defaultValue)
+            isChecked = if (key == ModuleSettings.KEY_BLOCK_UPDATE_ENABLED) {
+                runCatching { prefs.getBoolean(key, defaultValue) }.getOrDefault(defaultValue)
+            } else {
+                prefs.getBoolean(key, defaultValue)
+            }
             setOnCheckedChangeListener { _: CompoundButton, isChecked: Boolean ->
                 if (!refreshing) {
                     handleSwitchChanged(key, isChecked)

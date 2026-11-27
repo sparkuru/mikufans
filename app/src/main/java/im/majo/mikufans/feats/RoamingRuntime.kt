@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import im.majo.mikufans.ModuleSettingsBridge
 import kotlin.LazyThreadSafetyMode
 import im.majo.mikufans.feats.hook.BottomBarHook
+import im.majo.mikufans.feats.hook.BlockUpdateHook
 import im.majo.mikufans.feats.hook.AutoLikeHook
 import im.majo.mikufans.feats.hook.AccessKeyHook
 import im.majo.mikufans.feats.hook.ChronosPromotionHook
@@ -72,6 +73,7 @@ object RoamingRuntime {
             ProcessScope.MAIN -> listOf(
                 ::SettingHook,
                 ::SplashAdHook,
+                ::BlockUpdateHook,
                 ::ShareHook,
                 ::FreeCopyHook,
                 ::BottomBarHook,

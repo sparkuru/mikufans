@@ -37,6 +37,7 @@ object ModuleRemotePreferences : XposedServiceHelper.OnServiceListener {
         if (this.service === service) this.service = null
     }
 
+    @Synchronized
     fun syncSnapshot(prefs: SharedPreferences) {
         val values = prefs.all
         withRemoteEditor { editor ->
@@ -45,6 +46,7 @@ object ModuleRemotePreferences : XposedServiceHelper.OnServiceListener {
         }
     }
 
+    @Synchronized
     fun applyOperations(operations: List<PreferenceOperation>) {
         if (operations.isEmpty()) return
         withRemoteEditor { editor ->
@@ -57,6 +59,26 @@ object ModuleRemotePreferences : XposedServiceHelper.OnServiceListener {
             }
         }
     }
+
+    @Synchronized
+    fun setBlockUpdateEnabled(context: Context, enabled: Boolean): Boolean = runCatching {
+        val remote = service?.getRemotePreferences(ModuleSettings.PREFS_NAME) ?: return@runCatching false
+        val local = context.moduleSettingsPreferences()
+        val previous = local.getBoolean(
+            ModuleSettings.KEY_BLOCK_UPDATE_ENABLED,
+            ModuleSettings.DEFAULT_BLOCK_UPDATE_ENABLED,
+        )
+        saveUpdateBlockingPreference(
+            enabled = enabled,
+            previous = previous,
+            writeLocal = { value ->
+                local.edit().putBoolean(ModuleSettings.KEY_BLOCK_UPDATE_ENABLED, value).commit()
+            },
+            writeRemote = { value ->
+                remote.edit().putBoolean(ModuleSettings.KEY_BLOCK_UPDATE_ENABLED, value).commit()
+            },
+        )
+    }.getOrDefault(false)
 
     private fun withRemoteEditor(block: (SharedPreferences.Editor) -> Unit) {
         val currentService = service ?: return
@@ -85,6 +107,34 @@ object ModuleRemotePreferences : XposedServiceHelper.OnServiceListener {
 
     private fun Context.moduleSettingsPreferences(): SharedPreferences =
         getSharedPreferences(ModuleSettings.PREFS_NAME, Context.MODE_PRIVATE)
+}
+
+internal fun saveUpdateBlockingPreference(
+    enabled: Boolean,
+    previous: Boolean,
+    writeLocal: (Boolean) -> Boolean,
+    writeRemote: (Boolean) -> Boolean,
+): Boolean {
+    fun writeSafely(writer: (Boolean) -> Boolean, value: Boolean): Boolean =
+        runCatching { writer(value) }.getOrDefault(false)
+
+    if (enabled) {
+        if (!writeSafely(writeLocal, true)) {
+            writeSafely(writeLocal, previous)
+            return false
+        }
+        if (writeSafely(writeRemote, true)) return true
+        // A failed remote write may have taken effect; confirm it is disabled before restoring local false.
+        if (writeSafely(writeRemote, previous)) writeSafely(writeLocal, previous)
+        return false
+    }
+    if (!writeSafely(writeRemote, false)) {
+        writeSafely(writeRemote, previous)
+        return false
+    }
+    if (writeSafely(writeLocal, false)) return true
+    if (writeSafely(writeLocal, previous)) writeSafely(writeRemote, previous)
+    return false
 }
 
 sealed interface PreferenceOperation {

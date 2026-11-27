@@ -9,6 +9,8 @@ object ModuleSettings {
     const val KEY_SKIP_REWARD_AD_ENABLED = "skip_reward_ad"
     const val KEY_BLOCK_TEENAGERS_MODE_DIALOG_ENABLED = "block_teenagers_mode_dialog"
     const val KEY_SKIP_SPLASH_AD_ENABLED = "skip_splash_ad_enabled"
+    const val KEY_BLOCK_UPDATE_ENABLED = "block_update_enabled"
+    const val DEFAULT_BLOCK_UPDATE_ENABLED = true
     const val KEY_SKIP_VIDEO_AD_ENABLED = "skip_video_ad_enabled"
     const val KEY_SKIP_VIDEO_AD_AUTO_LIKE_ENABLED = "skip_video_ad_auto_like_enabled"
     const val KEY_SKIP_VIDEO_AD_CATEGORIES = "skip_video_ad_categories"

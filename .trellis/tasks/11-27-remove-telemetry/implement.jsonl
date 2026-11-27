@@ -1,0 +1,10 @@
+{"file": ".trellis/mainline.md", "reason": "Project direction and planning authorization"}
+{"file": ".trellis/spec/trellis-plus/index.md", "reason": "Shared project policy index"}
+{"file": ".trellis/spec/trellis-plus/development-principles.md", "reason": "Project-wide scope and engineering principles"}
+{"file": ".trellis/spec/trellis-plus/android-conventions.md", "reason": "Android hooks settings and compatibility"}
+{"file": ".trellis/spec/trellis-plus/development.md", "reason": "Android build and device verification"}
+{"file": ".trellis/spec/trellis-plus/ui-validation.md", "reason": "Apply when native settings or interaction changes"}
+{"file": ".trellis/spec/trellis-plus/review-and-archive.md", "reason": "Planning checks and final review"}
+{"file": ".trellis/spec/guides/index.md", "reason": "Shared coding thinking guides"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Inspect existing paths and avoid duplication"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Consider host hooks and settings interactions"}

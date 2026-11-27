@@ -26,6 +26,55 @@ Reflection helpers may return `null`, and individual method helpers may return z
 
 The bridge editor's `commit()` invokes `apply()` and returns `true`; provider writes use preference `apply()`, so that return value does not establish end-to-end durable persistence. Verify a setting change across the actual process boundary and restart when that behavior is in scope. The provider authorizes a caller when a package associated with its UID matches the module or allowlist; preserve and test that boundary when changing access. [`AccessKeyRepository.kt`](../../../app/src/main/java/im/majo/mikufans/AccessKeyRepository.kt) can retain a validated access key: never include preference dumps, access keys, tokens, or private account values in logs or task evidence.
 
+### Scenario: update-blocking setting across module and host
+
+#### 1. Scope / trigger
+
+Use this contract when changing the `block_update_enabled` switch or its hook for `com.bilibili.app.in` 3.20.4. Android 11 device testing showed that the host may not resolve the module provider even while libxposed remote preferences work.
+
+#### 2. Signatures
+
+- `ModuleSettings.KEY_BLOCK_UPDATE_ENABLED: String` identifies the Boolean preference; `DEFAULT_BLOCK_UPDATE_ENABLED` is `true`.
+- `ModuleSettingsBridge.getBooleanFromAvailableSources(key: String, defValue: Boolean): Boolean?` reads the provider first and then remote preferences; `null` means neither value was obtainable.
+- `ModuleRemotePreferences.setBlockUpdateEnabled(context: Context, enabled: Boolean): Boolean` coordinates this switch's local and remote writes. Its result says whether both writes were confirmed, not that two stores are atomic.
+
+#### 3. Contracts
+
+The hook runs only in the target package's main process, version code `8230800` / version name `3.20.4`, on Android 8.0 or newer. If the setting is unavailable, it leaves the host method in control. Once a hook instance reads `false`, that instance stays disabled for its lifetime. The settings page says to restart the host and reports when synchronization is unconfirmed; hot reload may create another instance and was not separately verified.
+
+#### 4. Validation and error matrix
+
+| Condition | Required behavior |
+| --- | --- |
+| Provider available | Use its Boolean, including the configured default for a missing key. |
+| Provider unavailable, remote readable | Use the remote Boolean; the Android 11 board exercised this path. |
+| Both reads unavailable or throw | Do not block the host update call; log without private data. |
+| Setting write cannot be confirmed | Attempt compensation and show the synchronization notice; do not claim an atomic commit. |
+| A confirmed `false` was read earlier by this hook instance | Keep update blocking disabled for that instance, even if a later source is stale. |
+
+#### 5. Good / base / bad cases
+
+- Good: disabling the switch writes remote then local, restarting the host restores the original update behavior, and the UI agrees with the saved state.
+- Base: an unset, readable preference defaults to enabled and a blocked manual check gives an explicit notice.
+- Bad: treating an unavailable source or the bridge's generic fallback as proof of a saved value, or presenting an uncertain two-store write as successful.
+
+#### 6. Tests required
+
+Run `testDebugUnitTest` for source priority, unavailable reads, hook-instance disabled state, and local/remote write and compensation failures. For changed host behavior, verify the setting across a real process restart and use a controlled forced-update object plus logs; a build or missing dialog alone is insufficient. Existing stale snapshots, process death between writes, repeated compensation failures, hot reload, the direct `FORCE` action, and real server responses require explicit evidence before claiming coverage.
+
+#### 7. Wrong vs correct
+
+```kotlin
+// Wrong for this hook: a generic fallback can hide unavailable settings.
+val enabled = prefs.getBoolean(ModuleSettings.KEY_BLOCK_UPDATE_ENABLED, true)
+
+// Correct: preserve the unavailable state and let the hook fail open.
+val enabled = ModuleSettingsBridge.instance.getBooleanFromAvailableSources(
+    ModuleSettings.KEY_BLOCK_UPDATE_ENABLED,
+    ModuleSettings.DEFAULT_BLOCK_UPDATE_ENABLED,
+)
+```
+
 No application SQL, ORM, or migration convention has been established by the current source. Follow the actual preferences and bridge contracts above rather than inventing a database layer.
 
 ## Errors and verification

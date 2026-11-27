@@ -1,0 +1,32 @@
+{
+  "id": "impl-bbzq-new-features",
+  "name": "impl-bbzq-new-features",
+  "title": "实现 BBZQ 新功能与修复",
+  "description": "整理并跟进 README 中五项 Bilibili International 3.20.4 功能与修复需求",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "9bishi",
+  "assignee": "9bishi",
+  "createdAt": "2026-11-27",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "master",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "11-27-fix-share-short-links",
+    "11-27-handle-forced-update",
+    "11-27-support-purchased-emoji",
+    "11-27-copy-dynamic-external-links",
+    "11-27-remove-telemetry"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}

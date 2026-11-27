@@ -124,4 +124,5 @@ dependencies {
     compileOnly(libs.libxposed.api)
     implementation(libs.libxposed.service)
     implementation(libs.okhttp)
+    testImplementation(libs.junit)
 }

@@ -155,6 +155,26 @@ class ModuleSettingsBridge private constructor() : SharedPreferences {
         }
     }
 
+    internal fun getBooleanFromAvailableSources(key: String, defValue: Boolean): Boolean? =
+        readAvailableBoolean(
+            provider = { getBooleanFromProvider(key, defValue) },
+            remote = { resolveRemotePreferences()?.getBoolean(key, defValue) },
+        )
+
+    private fun getBooleanFromProvider(key: String, defValue: Boolean): Boolean? {
+        if (isProviderRetryBlocked()) return null
+        val result = call(
+            ModuleSettingsProvider.METHOD_GET_BOOLEAN,
+            key,
+            Bundle().apply { putBoolean(ModuleSettingsProvider.EXTRA_DEFAULT, defValue) },
+        )
+        return if (result?.containsKey(ModuleSettingsProvider.EXTRA_VALUE) == true) {
+            result.getBoolean(ModuleSettingsProvider.EXTRA_VALUE)
+        } else {
+            null
+        }
+    }
+
     override fun contains(key: String?): Boolean {
         ensureLoaded()
         if (synchronized(cacheLock) { localCache.containsKey(key) }) return true
@@ -390,3 +410,6 @@ class ModuleSettingsBridge private constructor() : SharedPreferences {
         val authoritative: Boolean,
     )
 }
+
+internal fun readAvailableBoolean(provider: () -> Boolean?, remote: () -> Boolean?): Boolean? =
+    runCatching(provider).getOrNull() ?: runCatching(remote).getOrNull()
